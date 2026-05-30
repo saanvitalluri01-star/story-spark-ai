@@ -246,8 +246,6 @@ const FooterComponent = () => {
         <div className="mt-4 flex flex-col md:flex-row items-center justify-between gap-4 text-[12px] text-slate-400/80">
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-2.5 gap-y-1 text-center md:text-left">
             <span className="text-slate-400/80">&copy; {currentYear} StorySparkAI. All rights reserved.</span>
-            <span className="hidden sm:inline text-white/[0.12]">|</span>
-            <span className="italic text-slate-400/60">Batool Amina Copyright</span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1">
             {legalLinks.map(({ label, to }, i) => (

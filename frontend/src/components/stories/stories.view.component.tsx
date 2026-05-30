@@ -20,8 +20,6 @@ import {
   useGenerateFreeAlternateEndingsMutation,
 } from "../../redux/apis/ai.model.api";
 
-// ─── StoryCoverImage ────────────────────────────────────────────────────────
-
 const GENRE_THEMES: Record<string, { gradient: string; accent: string; icon: string }> = {
   fantasy:    { gradient: "135deg, #667eea 0%, #764ba2 50%, #f093fb 100%", accent: "#c084fc", icon: "✦" },
   romance:    { gradient: "135deg, #f857a6 0%, #ff5858 50%, #ffb347 100%", accent: "#fb7185", icon: "♡" },
@@ -107,7 +105,6 @@ const StoryCoverImage: React.FC<StoryCoverImageProps> = ({
         ...style,
       }}
     >
-      {/* Decorative orbs */}
       <div style={{
         position: "absolute", top: "-30%", right: "-15%",
         width: "60%", height: "120%",
@@ -123,7 +120,6 @@ const StoryCoverImage: React.FC<StoryCoverImageProps> = ({
         pointerEvents: "none",
       }} />
 
-      {/* Accent glyph */}
       <div style={{
         position: "absolute", top: "12px", right: "16px",
         fontSize: "3.5rem",
@@ -137,7 +133,6 @@ const StoryCoverImage: React.FC<StoryCoverImageProps> = ({
         {theme.icon}
       </div>
 
-      {/* Genre pill */}
       <div style={{
         position: "absolute", top: "14px", left: "14px",
         background: "rgba(0,0,0,0.28)",
@@ -155,7 +150,6 @@ const StoryCoverImage: React.FC<StoryCoverImageProps> = ({
         {tag}
       </div>
 
-      {/* Large faded initials centred */}
       <div style={{
         position: "absolute", inset: 0,
         display: "flex", alignItems: "center", justifyContent: "center",
@@ -173,7 +167,6 @@ const StoryCoverImage: React.FC<StoryCoverImageProps> = ({
         </div>
       </div>
 
-      {/* Title at bottom */}
       <div style={{
         position: "absolute", bottom: 0, left: 0, right: 0,
         background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
@@ -197,8 +190,6 @@ const StoryCoverImage: React.FC<StoryCoverImageProps> = ({
     </div>
   );
 };
-
-// ─── Main Component ─────────────────────────────────────────────────────────
 
 export interface IStories {
   uuid: string;
@@ -323,6 +314,7 @@ const StoriesViewComponent: React.FC<StoriesComponentProps> = ({
       setIsGeneratingEndings(false);
     }
   };
+
   const handleApplyEnding = (endingData: { style: string; ending: string; fullStory: string }) => {
     if (!selectedStory) return;
     const updatedStory = { ...selectedStory, content: endingData.fullStory };
@@ -576,8 +568,10 @@ const StoriesViewComponent: React.FC<StoriesComponentProps> = ({
 
   if (!stories || !stories.length) {
     return (
-      <div className="text-center text-gray-400 py-10">
-        No stories generated yet. Start by entering a prompt ✨
+      <div className="w-full text-center text-slate-400 dark:text-slate-500 py-16">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-white/[0.02] border border-slate-200 dark:border-white/5 text-sm font-medium">
+          No stories generated yet. Start by entering a prompt ✨
+        </div>
       </div>
     );
   }
@@ -587,44 +581,43 @@ const StoriesViewComponent: React.FC<StoriesComponentProps> = ({
   }
 
   return (
-    <div className="mt-16 px-4 sm:px-6 lg:px-8 max-w-8xl mx-auto pb-10">
-      <style>{`
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
-      `}</style>
+    <div className="w-full min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pt-8 pb-16 relative overflow-hidden box-border">
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-[120px] pointer-events-none select-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-purple-600/5 rounded-full blur-[120px] pointer-events-none select-none" />
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 animate-fade-in-up">
-        {/* ── Left column ── */}
-        <div className="col-span-1 lg:col-span-8 flex flex-col">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
-            <div>
-              <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-blue-400 mb-2">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start relative z-10 w-full box-border">
+        
+        {/* ── Left Column ── */}
+        <div className="col-span-1 lg:col-span-8 flex flex-col space-y-6 w-full box-border">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-5 w-full box-border border-b border-slate-200/60 dark:border-white/5 pb-6">
+            <div className="text-left">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-3">
                 {selectedStory?.title}
               </h1>
-              <div className="flex flex-wrap gap-2">
-                <span className="inline-flex items-center rounded-full bg-purple-900/60 text-purple-300 border border-purple-700/50 py-1 px-3 text-xs font-semibold">
+              <div className="flex flex-wrap gap-2 select-none">
+                <span className="inline-flex items-center gap-1.5 rounded-xl bg-blue-500/5 text-blue-600 dark:text-blue-400 border border-blue-500/10 py-1 px-3 text-xs font-bold uppercase tracking-wider shadow-sm">
                   🎭 {selectedStory.tag}
                 </span>
-                <span className="inline-flex items-center rounded-full bg-blue-900/60 text-blue-300 border border-blue-700/50 py-1 px-3 text-xs font-semibold">
+                <span className="inline-flex items-center gap-1.5 rounded-xl bg-purple-500/5 text-purple-600 dark:text-purple-400 border border-purple-500/10 py-1 px-3 text-xs font-bold uppercase tracking-wider shadow-sm">
                   🌐 {selectedStory.language || "English"}
                 </span>
                 {selectedStory.emotions && selectedStory.emotions.length > 0 && (
-                  <span className="inline-flex items-center rounded-full bg-emerald-900/60 text-emerald-300 border border-emerald-700/50 py-1 px-3 text-xs font-semibold">
+                  <span className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-500/5 text-emerald-600 dark:text-emerald-400 border border-emerald-500/10 py-1 px-3 text-xs font-bold uppercase tracking-wider shadow-sm">
                     😊 {selectedStory.emotions.join(", ")}
                   </span>
                 )}
               </div>
             </div>
 
-            {/* ── SPOT 1: Story selector thumbnails (circular) ── */}
-            <div className="flex justify-start sm:justify-end">
-              <div className="flex -space-x-5">
+            {/* Story selector thumbnails */}
+            <div className="flex justify-start sm:justify-end shrink-0 select-none">
+              <div className="flex -space-x-4">
                 {stories && stories.length > 0 && stories.map((story) => (
                   <button
                     key={story.uuid}
-                    className={`relative w-16 h-16 rounded-full border-2 ${
-                      selectedStory?.uuid === story.uuid ? "border-blue-500 scale-110" : "border-white"
-                    } hover:scale-110 transition-transform duration-200 focus:outline-none overflow-hidden`}
+                    className={`relative w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 ${
+                      selectedStory?.uuid === story.uuid ? "border-blue-600 scale-110 z-10 shadow-md" : "border-white dark:border-slate-800"
+                    } hover:scale-110 hover:z-10 transition-all duration-150 focus:outline-none overflow-hidden cursor-pointer`}
                     onClick={() => handelStorySelection(story)}
                     title={story.title}
                   >
@@ -641,40 +634,32 @@ const StoriesViewComponent: React.FC<StoriesComponentProps> = ({
           </div>
 
           {/* Story content card */}
-          <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 p-8 rounded-2xl shadow-2xl relative overflow-hidden">
-            <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div className="absolute bottom-[-50px] left-[-50px] w-48 h-48 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-              <h3 className="text-xl font-bold text-slate-200 relative z-10">Generated Story</h3>
-              <div className="flex flex-wrap items-center gap-2 relative z-10">
-                <button type="button" className="rounded-lg px-4 py-2 bg-slate-700 text-slate-200 font-semibold cursor-pointer hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={handleCopyStory} disabled={!selectedStory}>
+          <div className="bg-white dark:bg-[#111827]/40 backdrop-blur-xl border border-slate-200 dark:border-white/10 p-6 sm:p-8 rounded-2xl sm:rounded-3xl shadow-sm w-full box-border text-left">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-100 dark:border-white/5 select-none">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Workspace Blueprint</h3>
+              <div className="flex flex-wrap items-center gap-2">
+                <button type="button" className="rounded-xl px-3 py-2 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 border border-slate-200/60 dark:border-transparent text-xs font-bold uppercase tracking-wider transition-all duration-150 active:scale-[0.98] cursor-pointer" onClick={handleCopyStory} disabled={!selectedStory}>
                   {isCopied ? "✓ Copied" : "📋 Copy"}
                 </button>
-                <button type="button" className="rounded-lg px-4 py-2 bg-purple-700 text-slate-200 font-semibold cursor-pointer hover:bg-purple-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={handleExportPDF} disabled={!selectedStory}>
-                  📄 Export PDF
+                <button type="button" className="rounded-xl px-3 py-2 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 border border-slate-200/60 dark:border-transparent text-xs font-bold uppercase tracking-wider transition-all duration-150 active:scale-[0.98] cursor-pointer" onClick={handleExportPDF} disabled={!selectedStory}>
+                  📄 PDF
                 </button>
-                <button type="button" className="rounded-lg px-4 py-2 bg-indigo-700 text-slate-200 font-semibold cursor-pointer hover:bg-indigo-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={handleExportMarkdown} disabled={!selectedStory}>
-                  ⬇️ Export Markdown
+                <button type="button" className="rounded-xl px-3 py-2 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 border border-slate-200/60 dark:border-transparent text-xs font-bold uppercase tracking-wider transition-all duration-150 active:scale-[0.98] cursor-pointer" onClick={handleExportMarkdown} disabled={!selectedStory}>
+                  ⬇️ Markdown
                 </button>
-                <button type="button" className="rounded-lg px-4 py-2 bg-violet-700 text-slate-200 font-semibold cursor-pointer hover:bg-violet-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setShowWorldMap(true)} disabled={!selectedStory}>
-                  🗺️ World Map
+                <button type="button" className="rounded-xl px-3 py-2 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 border border-slate-200/60 dark:border-transparent text-xs font-bold uppercase tracking-wider transition-all duration-150 active:scale-[0.98] cursor-pointer" onClick={() => setShowWorldMap(true)} disabled={!selectedStory}>
+                  🗺️ Map
                 </button>
-                <button type="button" className="rounded-lg px-4 py-2 bg-fuchsia-700 text-slate-200 font-semibold cursor-pointer hover:bg-fuchsia-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setShowRemix(true)} disabled={!selectedStory}>
+                <button type="button" className="rounded-xl px-3 py-2 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 border border-slate-200/60 dark:border-transparent text-xs font-bold uppercase tracking-wider transition-all duration-150 active:scale-[0.98] cursor-pointer" onClick={() => setShowRemix(true)} disabled={!selectedStory}>
                   🔀 Remix
                 </button>
-                <button
-                  type="button"
-                  className="rounded-lg px-4 py-2 bg-emerald-700 text-slate-200 font-semibold cursor-pointer hover:bg-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={() => setShowTranslator(true)}
-                  disabled={!selectedStory}
-                >
+                <button type="button" className="rounded-xl px-3 py-2 bg-slate-50 text-slate-600 hover:bg-slate-100 dark:bg-white/5 dark:text-slate-300 dark:hover:bg-white/10 border border-slate-200/60 dark:border-transparent text-xs font-bold uppercase tracking-wider transition-all duration-150 active:scale-[0.98] cursor-pointer" onClick={() => setShowTranslator(true)} disabled={!selectedStory}>
                   🌍 Translate
                 </button>
                 <button
                   type="button"
                   id="publish-story-btn"
-                  className={`rounded-lg px-5 py-2 font-semibold flex items-center space-x-2 cursor-pointer bg-blue-600 text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${loading ? "" : "hover:bg-blue-500 hover:shadow-lg active:scale-95"}`}
+                  className="rounded-xl px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold uppercase tracking-wider transition-all duration-150 active:scale-[0.98] cursor-pointer disabled:opacity-50"
                   onClick={handelPublishStory}
                   disabled={loading || !selectedStory}
                 >
@@ -684,21 +669,21 @@ const StoriesViewComponent: React.FC<StoriesComponentProps> = ({
             </div>
 
             {selectedStory.enhancedPrompt && (
-              <div className="mb-6 p-4 bg-indigo-900/30 border border-indigo-700/50 rounded-xl relative z-10">
-                <h4 className="text-sm font-semibold text-indigo-300 mb-2 flex items-center gap-2">
+              <div className="mb-6 p-4 bg-blue-500/5 border border-blue-500/10 rounded-xl">
+                <h4 className="text-xs font-bold text-blue-600 dark:text-blue-400 mb-2 uppercase tracking-wider flex items-center gap-2 select-none">
                   <i className="fas fa-wand-magic-sparkles"></i> AI Enhanced Prompt
                 </h4>
-                <p className="text-slate-300 text-sm italic break-words whitespace-pre-wrap">{selectedStory.enhancedPrompt}</p>
+                <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm italic break-words whitespace-pre-wrap m-0 leading-relaxed font-medium">{selectedStory.enhancedPrompt}</p>
               </div>
             )}
 
-            <div id="story-content" className="prose prose-invert max-w-none text-slate-300 leading-relaxed tracking-wide relative z-10">
-              <p className="break-words whitespace-pre-wrap">
+            <div id="story-content" className="w-full text-slate-700 dark:text-slate-300 text-sm sm:text-base leading-relaxed tracking-wide font-medium">
+              <p className="break-words whitespace-pre-wrap m-0">
                 {sentenceSegments.length > 0 ? (
                   sentenceSegments.map((segment: StorySentenceSegment) => {
                     const isActiveSentence = isNarrationActive && narrationWordIndex >= segment.startWordIndex && narrationWordIndex <= segment.endWordIndex;
                     return (
-                      <span key={segment.id} className={isActiveSentence ? "rounded-md bg-indigo-500/20 px-0.5 py-0.5 text-indigo-100 ring-1 ring-indigo-400/30" : undefined}>
+                      <span key={segment.id} className={isActiveSentence ? "rounded-lg bg-blue-500/10 dark:bg-blue-500/20 px-1 py-0.5 text-slate-900 dark:text-white font-semibold transition-all" : undefined}>
                         {segment.text}
                       </span>
                     );
@@ -707,171 +692,168 @@ const StoriesViewComponent: React.FC<StoriesComponentProps> = ({
               </p>
             </div>
 
-            <div className="relative z-10 mt-6">
+            <div className="mt-8 pt-6 border-t border-slate-100 dark:border-white/5 w-full box-border">
               <AudioPlayer ref={audioPlayerRef} text={selectedStory.content} title={selectedStory.title} onWordIndexChange={setNarrationWordIndex} onPlaybackStateChange={setNarrationState} />
             </div>
-            <div className="mt-6"><ContinueStoryButton /></div>
+            <div className="mt-4 w-full box-border"><ContinueStoryButton /></div>
           </div>
 
-          {/* Topics + Alternate Endings */}
-          <div className="mt-7">
-            <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-xl p-6 mb-8">
-              <h3 className="text-lg font-bold text-slate-200 mb-4">Select Topics</h3>
-              <div className="flex flex-col sm:flex-row gap-3 mb-4">
-                <input
-                  type="text"
-                  value={newTopicTitle}
-                  onChange={(event) => setNewTopicTitle(event.target.value)}
-                  onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); handleAddTopic(); } }}
-                  placeholder="Add related topic"
-                  className="flex-1 rounded-lg border border-slate-600 bg-slate-900/70 px-4 py-2 text-sm text-slate-200 placeholder:text-slate-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-                />
-                <button type="button" className="rounded-lg px-4 py-2 bg-blue-600 text-white font-semibold cursor-pointer hover:bg-blue-500 transition-colors" onClick={handleAddTopic}>
-                  Add Topic
-                </button>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {selectedStory ? (
-                  topics.map((topic, index) => (
-                    <span key={index} className={`inline-flex items-center gap-2 px-4 py-1.5 ${topic.className} rounded-full text-sm font-medium transition-transform hover:scale-105 shadow-sm`}>
-                      <button type="button" className="cursor-pointer" onClick={() => handleTopicClick(index)}>
-                        {topic.selected ? <i className="fa-solid fa-check"></i> : <i className="fa-solid fa-plus"></i>}{" "}{topic.title}
-                      </button>
-                      <button type="button" className="cursor-pointer border-l border-current/30 pl-2 disabled:cursor-not-allowed disabled:opacity-40" onClick={() => handleRemoveTopic(index)} disabled={topics.length <= 2} aria-label={`Remove ${topic.title}`}>
-                        <i className="fa-solid fa-xmark"></i>
-                      </button>
-                    </span>
-                  ))
-                ) : (
-                  <p className="text-gray-400">No topics available. Please generate a story first.</p>
+          {/* Topics management section */}
+          <div className="bg-white dark:bg-[#111827]/40 backdrop-blur-xl border border-slate-200 dark:border-white/10 p-5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm w-full box-border text-left">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4 select-none">Categorization Indexes</h3>
+            <div className="flex flex-col sm:flex-row gap-3 mb-5 select-none w-full box-border">
+              <input
+                type="text"
+                value={newTopicTitle}
+                onChange={(event) => setNewTopicTitle(event.target.value)}
+                onKeyDown={(event) => { if (event.key === "Enter") { event.preventDefault(); handleAddTopic(); } }}
+                placeholder="Add contextual keyword index tag..."
+                className="flex-1 rounded-xl border border-slate-200 bg-slate-50 dark:bg-slate-950/60 px-4 py-2 text-xs sm:text-sm text-slate-800 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-blue-500/40 focus:outline-none transition-colors"
+              />
+              <button type="button" className="rounded-xl px-4 py-2.5 bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold uppercase tracking-wider hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors active:scale-[0.98] cursor-pointer" onClick={handleAddTopic}>
+                Add Tag
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2 w-full box-border">
+              {selectedStory ? (
+                topics.map((topic, index) => (
+                  <span key={index} className={`inline-flex items-center gap-2 px-3 py-1.5 ${topic.className} rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-sm border border-slate-100 dark:border-transparent select-none`}>
+                    <button type="button" className="cursor-pointer font-bold uppercase flex items-center gap-1.5" onClick={() => { handleTopicClick(index); }}>
+                      {topic.selected ? <i className="fa-solid fa-check" /> : <i className="fa-solid fa-plus" />}{topic.title}
+                    </button>
+                    <button type="button" className="cursor-pointer border-l border-current/20 pl-2 opacity-50 hover:opacity-100 disabled:cursor-not-allowed" onClick={() => handleRemoveTopic(index)} disabled={topics.length <= 2} aria-label={`Remove ${topic.title}`}>
+                      <i className="fa-solid fa-xmark" />
+                    </button>
+                  </span>
+                ))
+              ) : (
+                <p className="text-xs font-medium text-slate-400 dark:text-slate-500 m-0">No keyword topics registered.</p>
+              )}
+            </div>
+          </div>
+
+          {/* Alternate endings control hub */}
+          {selectedStory && (
+            <div className="bg-white dark:bg-[#111827]/40 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl sm:rounded-3xl p-5 sm:p-6 shadow-sm w-full box-border text-left relative overflow-hidden">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 select-none w-full box-border">
+                <div>
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Narrative Path Modifications</h3>
+                  <p className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider mt-1.5">Branch out into unique storytelling variations.</p>
+                </div>
+                {selectedStory.content !== originalStoryContent[selectedStory.uuid] && (
+                  <button type="button" onClick={handleResetEnding} className="w-full sm:w-auto rounded-xl px-3.5 py-2 bg-red-500/5 hover:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/10 text-xs font-bold uppercase tracking-wider transition-all active:scale-[0.98] cursor-pointer flex items-center justify-center gap-1.5">
+                    <i className="fa-solid fa-rotate-left" /> Revert to Original
+                  </button>
                 )}
               </div>
-            </div>
 
-            {selectedStory && (
-              <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-xl p-6 mt-8 relative overflow-hidden">
-                <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-purple-500/5 rounded-full blur-3xl pointer-events-none"></div>
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                  <div>
-                    <h3 className="text-xl font-bold text-slate-200">Alternate Endings</h3>
-                    <p className="text-xs text-slate-400 mt-1">Explore alternate narrative styles for your story context.</p>
-                  </div>
-                  {selectedStory.content !== originalStoryContent[selectedStory.uuid] && (
-                    <button type="button" onClick={handleResetEnding} className="rounded-lg px-4 py-2 bg-red-950/40 hover:bg-red-900/60 text-red-200 border border-red-700/50 font-semibold text-sm transition-all active:scale-95 cursor-pointer flex items-center gap-1.5">
-                      <i className="fa-solid fa-rotate-left"></i> Reset to Original
-                    </button>
-                  )}
+              {isGeneratingEndings ? (
+                <div className="flex flex-col items-center justify-center py-12 select-none w-full">
+                  <div className="animate-spin rounded-full h-8 w-8 border-2 border-slate-300 border-t-blue-600 dark:border-white/10 dark:border-t-white mb-4"></div>
+                  <p className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 animate-pulse">Running variant projection logic...</p>
                 </div>
-
-                {isGeneratingEndings ? (
-                  <div className="flex flex-col items-center justify-center py-10">
-                    <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-purple-500 mb-4"></div>
-                    <p className="text-slate-300 text-sm font-medium animate-pulse">Generating alternate endings...</p>
-                  </div>
-                ) : endingsCache[selectedStory.uuid]?.length > 0 ? (
-                  <div>
-                    <div className="flex border-b border-slate-700/50 mb-6 overflow-x-auto whitespace-nowrap scrollbar-none">
-                      {["Happy Ending", "Dark Ending", "Plot Twist Ending", "Open Ending", "Cliffhanger Ending"].map((name) => {
-                        const endingData = (endingsCache[selectedStory.uuid] || []).find((e) => e.style === name);
-                        const isApplied = endingData && selectedStory.content === endingData.fullStory;
-                        return (
-                          <button key={name} type="button" onClick={() => setActiveEndingTab(name)}
-                            className={`px-5 py-3 font-semibold text-sm flex items-center gap-2 border-b-2 transition-all cursor-pointer ${activeEndingTab === name ? "border-purple-500 text-purple-400 bg-purple-500/5" : "border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-700"}`}>
-                            <span>{name}</span>
-                            {isApplied && <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-ping"></span>}
-                          </button>
-                        );
-                      })}
-                    </div>
-                    {(() => {
-                      const currentEndingData = (endingsCache[selectedStory.uuid] || []).find((e) => e.style === activeEndingTab);
-                      if (!currentEndingData) return null;
-                      const isCurrentlyApplied = selectedStory.content === currentEndingData.fullStory;
+              ) : endingsCache[selectedStory.uuid]?.length > 0 ? (
+                <div className="w-full box-border">
+                  <div className="flex border-b border-slate-100 dark:border-white/5 mb-5 overflow-x-auto whitespace-nowrap scrollbar-none select-none w-full box-border">
+                    {["Happy Ending", "Dark Ending", "Plot Twist Ending", "Open Ending", "Cliffhanger Ending"].map((name) => {
+                      const endingData = (endingsCache[selectedStory.uuid] || []).find((e) => e.style === name);
+                      const isApplied = endingData && selectedStory.content === endingData.fullStory;
                       return (
-                        <div className="bg-slate-900/40 rounded-xl p-6 border border-slate-700/30">
-                          <div className="flex justify-between items-center mb-4">
-                            <h4 className="text-lg font-bold text-slate-200">{activeEndingTab} Suggestion</h4>
-                            <div>
-                              {isCurrentlyApplied ? (
-                                <span className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5">
-                                  <i className="fa-solid fa-check"></i> Applied to Story
-                                </span>
-                              ) : (
-                                <button type="button" onClick={() => handleApplyEnding(currentEndingData)} className="rounded-lg px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold text-sm transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-md hover:shadow-purple-500/20">
-                                  Apply to Story
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                          <div className="space-y-4">
-                            <div className="bg-slate-950/60 p-5 rounded-xl border border-slate-800 leading-relaxed text-slate-300 text-sm md:text-base italic shadow-inner whitespace-pre-wrap">
-                              <p>{currentEndingData.ending}</p>
-                            </div>
-                            <details className="group border border-slate-800 rounded-lg overflow-hidden bg-slate-950/20">
-                              <summary className="list-none flex items-center justify-between p-3 text-xs font-bold text-slate-400 hover:text-slate-200 cursor-pointer select-none">
-                                <span>PREVIEW FULL STORY WITH THIS ENDING</span>
-                                <span className="transition-transform duration-200 group-open:rotate-180">▼</span>
-                              </summary>
-                              <div className="p-4 border-t border-slate-800/80 text-xs text-slate-400 leading-relaxed max-h-56 overflow-y-auto whitespace-pre-wrap">
-                                {currentEndingData.fullStory}
-                              </div>
-                            </details>
+                        <button key={name} type="button" onClick={() => setActiveEndingTab(name)}
+                          className={`px-4 py-2.5 font-bold text-xs uppercase tracking-wider flex items-center gap-2 border-b-2 transition-all cursor-pointer ${activeEndingTab === name ? "border-blue-600 text-blue-600 dark:border-white dark:text-white bg-slate-50 dark:bg-white/5 rounded-t-xl" : "border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"}`}>
+                          <span>{name}</span>
+                          {isApplied && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {(() => {
+                    const currentEndingData = (endingsCache[selectedStory.uuid] || []).find((e) => e.style === activeEndingTab);
+                    if (!currentEndingData) return null;
+                    const isCurrentlyApplied = selectedStory.content === currentEndingData.fullStory;
+                    return (
+                      <div className="bg-slate-50/50 dark:bg-slate-950/30 rounded-xl p-5 border border-slate-200/60 dark:border-white/5 w-full box-border">
+                        <div className="flex justify-between items-center mb-4 select-none w-full box-border">
+                          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">{activeEndingTab} Excerpt</h4>
+                          <div>
+                            {isCurrentlyApplied ? (
+                              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-500/5 border border-emerald-500/10 px-2.5 py-1.5 rounded-lg flex items-center gap-1.5">
+                                <i className="fa-solid fa-circle-check" /> Active Node
+                              </span>
+                            ) : (
+                              <button type="button" onClick={() => handleApplyEnding(currentEndingData)} className="rounded-xl px-3.5 py-2 bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold uppercase tracking-wider hover:bg-slate-800 dark:hover:bg-slate-100 transition-all active:scale-[0.98] cursor-pointer shadow-sm">
+                                Apply Branch
+                              </button>
+                            )}
                           </div>
                         </div>
-                      );
-                    })()}
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-8 bg-slate-900/20 border border-dashed border-slate-700/40 rounded-xl">
-                    <button type="button" onClick={handleGenerateAlternateEndings} className="rounded-xl px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 flex items-center gap-2 cursor-pointer">
-                      Generate Alternate Endings
-                    </button>
-                    <p className="text-xs text-slate-400 mt-3 text-center max-w-sm px-4 leading-relaxed">
-                      Uses the story context to produce 5 unique ending variations (Happy, Dark, Plot Twist, Open, Cliffhanger) for comparison.
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+                        <div className="space-y-4 w-full box-border">
+                          <div className="bg-white dark:bg-[#111827]/40 p-4 rounded-xl border border-slate-200/80 dark:border-white/5 leading-relaxed text-slate-600 dark:text-slate-300 text-xs sm:text-sm italic shadow-inner whitespace-pre-wrap text-left font-medium">
+                            <p className="m-0">"{currentEndingData.ending}"</p>
+                          </div>
+                          <details className="group border border-slate-200/80 dark:border-white/5 rounded-xl overflow-hidden bg-white dark:bg-transparent">
+                            <summary className="list-none flex items-center justify-between p-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer select-none">
+                              <span>Preview Integrated Compounded Chronicle</span>
+                              <span className="transition-transform duration-150 group-open:rotate-180 text-[8px]">▼</span>
+                            </summary>
+                            <div className="p-4 border-t border-slate-200/60 dark:border-white/5 text-xs text-slate-400 dark:text-slate-500 leading-relaxed max-h-56 overflow-y-auto whitespace-pre-wrap text-left font-medium bg-slate-50/30 dark:bg-transparent">
+                              {currentEndingData.fullStory}
+                            </div>
+                          </details>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-10 bg-slate-50/50 dark:bg-white/[0.01] border border-dashed border-slate-200 dark:border-white/5 rounded-xl select-none w-full box-border">
+                  <button type="button" onClick={handleGenerateAlternateEndings} className="rounded-xl px-5 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold uppercase tracking-wider shadow-md shadow-blue-500/10 transition-all duration-150 hover:scale-105 active:scale-[0.98] flex items-center gap-2 cursor-pointer">
+                    <i className="fa-solid fa-shuffle text-xs" /> Transform Endings
+                  </button>
+                  <p className="text-[11px] text-slate-400 font-medium leading-relaxed mt-3.5 text-center max-w-sm px-4">
+                    Analyzes the current plot architecture to frame 5 distinct structural variations including Happy, Dark, Plot Twist, Open, and Cliffhanger resolutions.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* ── Right column: Preview ── */}
-        <div className="col-span-1 lg:col-span-4">
-          <div className="mb-5">
-            <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-blue-400">
-              Preview
-            </h1>
+        {/* ── Right Column: Preview Panel ── */}
+        <div className="col-span-1 lg:col-span-4 w-full box-border lg:sticky lg:top-6">
+          <div className="mb-4 text-left select-none px-0.5">
+            <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+              Compilation Preview
+            </h2>
           </div>
-          <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-2xl overflow-hidden group">
-            <div className="relative flex flex-col rounded-lg">
-              <div className="relative m-3 overflow-hidden text-white rounded-xl" style={{ height: "192px" }}>
-                {/* ── SPOT 2: Rectangular cover image ── */}
+          <div className="bg-white dark:bg-[#111827]/40 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl sm:rounded-3xl shadow-sm overflow-hidden group w-full box-border text-left">
+            <div className="flex flex-col w-full box-border">
+              <div className="relative p-3 overflow-hidden text-white w-full box-border" style={{ height: "192px" }}>
                 <StoryCoverImage
                   title={selectedStory.title}
                   tag={selectedStory.tag}
-                  className="transition-transform duration-500 group-hover:scale-105"
-                  style={{ width: "100%", height: "100%", borderRadius: "0.75rem" }}
+                  className="transition-transform duration-500 group-hover:scale-[1.02]"
+                  style={{ width: "100%", height: "100%", borderRadius: "1rem" }}
                 />
               </div>
 
-              <div className="px-3 py-1">
-                <div className="flex justify-between items-center mb-2 w-full">
-                  <div className="flex items-center gap-2">
-                    <div className="inline-flex items-center rounded-full bg-purple-600 py-1 px-3 text-xs font-semibold text-white shadow-sm">
-                      {selectedStory.tag.toUpperCase()}
+              <div className="p-5 sm:p-6 w-full box-border">
+                <div className="flex justify-between items-center mb-4 w-full box-border select-none">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <div className="inline-flex items-center rounded-lg bg-purple-500/10 border border-purple-500/10 py-1 px-2.5 text-[10px] font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">
+                      {selectedStory.tag}
                     </div>
-                    <div className="inline-flex items-center rounded-full bg-indigo-600 py-1 px-3 text-xs font-semibold text-white shadow-sm">
-                      🌐 {(selectedStory.language || "English").toUpperCase()}
+                    <div className="inline-flex items-center rounded-lg bg-blue-500/10 border border-blue-500/10 py-1 px-2.5 text-[10px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                      {selectedStory.language || "English"}
                     </div>
-                    <div className="inline-flex items-center rounded-full bg-slate-700 py-1 px-2.5 text-xs font-medium text-slate-300 shadow-sm gap-1">
-                      ⏱️ {calculateReadingTime(selectedStory.content)} min read
+                    <div className="inline-flex items-center rounded-lg bg-slate-100 dark:bg-white/5 py-1 px-2 text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 gap-1">
+                      ⏱️ {calculateReadingTime(selectedStory.content)} Min Read
                     </div>
                   </div>
-                  <div><BookmarkButton storyId={selectedStory.uuid} /></div>
+                  <div className="shrink-0"><BookmarkButton storyId={selectedStory.uuid} /></div>
                 </div>
-                <h6 className="mb-1 text-gray-300 text-xl font-semibold">{selectedStory.title}</h6>
-                <p className="text-gray-400 font-light break-words text-sm sm:text-base">{getShortenedText(selectedStory.content)}</p>
+                <h3 className="mb-2 text-slate-900 dark:text-slate-200 text-lg sm:text-xl font-extrabold tracking-tight leading-snug">{selectedStory.title}</h3>
+                <p className="text-slate-500 dark:text-slate-400 font-medium break-words text-xs sm:text-sm leading-relaxed m-0">{getShortenedText(selectedStory.content)}</p>
               </div>
             </div>
           </div>
