@@ -33,9 +33,12 @@ const SSInput = <T extends FieldValues>({
 }: SSInputProps<T>) => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const inputType =
-    type === "password" ? (showPassword ? "text" : "password") : type;
-
+const inputType =
+  type === "password"
+    ? showPassword
+      ? "text"
+      : "password"
+    : type;
   return (
     <div className="w-full">
       <label
@@ -55,7 +58,12 @@ const SSInput = <T extends FieldValues>({
         <input
           id={name}
           type={inputType}
-          placeholder={placeholder}
+          id={name}
+          className={`w-full pl-10 pr-10 py-2 text-base text-gray-900 dark:text-gray-200 bg-white dark:bg-slate-800 border rounded-md sm:text-sm transition-all focus:outline-none ${
+          error
+          ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 dark:border-red-500"
+          : "border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 dark:border-slate-600 dark:focus:border-blue-500"
+          }`}          placeholder={placeholder}
           autoComplete={autoComplete}
           {...register(name, validation)}
           className={`
@@ -98,16 +106,18 @@ const SSInput = <T extends FieldValues>({
         />
 
         {type === "password" && (
-          <button
-            type="button"
-            onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
-          >
-            <i
+  <button
+    type="button"
+    onClick={() => setShowPassword((prev) => !prev)}
+    className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+    aria-label={showPassword ? "Hide password" : "Show password"}
+    title={showPassword ? "Hide password" : "Show password"}
+  >
+    <i
               className={showPassword ? "fi fi-rr-eye" : "fi fi-rr-eye-crossed"}
             />
-          </button>
-        )}
+  </button>
+)}
       </div>
 
       <div className="min-h-[20px] mt-1">
