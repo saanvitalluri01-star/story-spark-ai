@@ -247,11 +247,11 @@ const { data } = useGetProfileInfoQuery();
                 alt="profile"
               />
 
-         <img
-  className="h-9 w-9 rounded-full"
-  src={data?.profile?.avatar || "https://ui-avatars.com/api/?name=User"}
-  alt="profile"
-/>
+        <img
+          className="h-9 w-9 rounded-full"
+          src={user?.avatar || "https://avatars.githubusercontent.com/u/76697055?v=4"}
+          alt={user?.name || "profile"}
+        />
         </div>
       </header>
 
