@@ -4,6 +4,7 @@ import config from "../../config";
 import { Secret } from "jsonwebtoken";
 import ApiError from "../../errors/api_error";
 import { JwtHalers } from "../../utils/jwt.helper";
+import { User } from "../modules/user/user.model";
 
 const auth =
   (...requiredRole: string[]) =>
@@ -23,6 +24,22 @@ const auth =
         token,
         config.jwt.secret as Secret
       );
+
+      const user = await User.findById((verifiedUser as any)._id);
+
+      if (!user) {
+        throw new ApiError(
+          httpStatus.UNAUTHORIZED,
+          "User not found"
+        );
+      }
+
+      if (user.tokenVersion !== (verifiedUser as any).tokenVersion) {
+        throw new ApiError(
+          httpStatus.UNAUTHORIZED,
+          "Token is invalid or expired"
+        );
+      }
 
       if (
         requiredRole.length &&
