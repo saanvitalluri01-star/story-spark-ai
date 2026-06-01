@@ -4,6 +4,8 @@ import {
   PieChart, Pie, Cell, CartesianGrid,
 } from "recharts";
 import { Link } from "react-router-dom";
+import { AUTH_KEY } from "../../constants/storage-key";
+import { getFromLocalStorage } from "../../utils/local-storage";
 
 const API_BASE = import.meta.env.VITE_BASE_URL || "http://localhost:5000/api/v1";
 
@@ -33,20 +35,28 @@ export default function AnalyticsDashboard() {
   const [wordCloud, setWordCloud] = useState<IWordCloud[]>([]);
   const [hours, setHours] = useState<IHour[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const token = localStorage.getItem("token") || "";
+  const token = getFromLocalStorage(AUTH_KEY) || "";
 
   const fetchData = async (endpoint: string) => {
     const res = await fetch(`${API_BASE}/analytics/${endpoint}`, {
-      headers: { Authorization: token },
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(data?.message || "Unable to load analytics data");
+    }
     return data.data;
   };
 
   useEffect(() => {
     const load = async () => {
       try {
+        setError("");
+        if (!token) {
+          throw new Error("Please log in again to view analytics.");
+        }
         const [ov, hm, gn, wc, hr] = await Promise.all([
           fetchData("overview"),
           fetchData("heatmap"),
@@ -61,6 +71,7 @@ export default function AnalyticsDashboard() {
         setHours(hr);
       } catch (e) {
         console.error(e);
+        setError(e instanceof Error ? e.message : "Unable to load analytics data");
       } finally {
         setLoading(false);
       }
@@ -74,7 +85,26 @@ export default function AnalyticsDashboard() {
     </div>
   );
 
-  const maxHour = hours.reduce((max, h) => h.count > max.count ? h : max, hours[0]);
+  if (error) return (
+    <div className="min-h-screen bg-[#0d0d14] text-white px-6 py-10">
+      <div className="max-w-3xl mx-auto">
+        <Link
+          to="/"
+          className="inline-block px-4 py-2 rounded-xl bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 hover:bg-indigo-500/30 transition mb-8"
+        >
+          ← Back to Home
+        </Link>
+        <div className="bg-red-500/10 border border-red-400/30 rounded-2xl p-6">
+          <h1 className="text-2xl font-semibold text-red-200">Analytics unavailable</h1>
+          <p className="text-red-100/80 mt-2">{error}</p>
+        </div>
+      </div>
+    </div>
+  );
+
+  const maxHour = hours.length > 0
+    ? hours.reduce((max, h) => h.count > max.count ? h : max, hours[0])
+    : null;
 
   return (
     <div className="min-h-screen bg-[#0d0d14] text-white px-6 py-10">
