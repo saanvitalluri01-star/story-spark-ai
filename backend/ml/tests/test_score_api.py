@@ -80,12 +80,12 @@ def test_empty_content_produces_per_story_error(client):
 
 # ── /score – happy path ───────────────────────────────────────────────────────
 
-@patch("score_api.score_story")
+@patch("score_api.batch_score")
 def test_valid_story_returns_scores(mock_score, client):
-    mock_score.return_value = {
-        "coherence": 0.8, "creativity": 0.7,
+    mock_score.return_value = [{
+        "uuid": "abc", "coherence": 0.8, "creativity": 0.7,
         "relevance": 0.9, "overall": 0.8
-    }
+    }]
     stories = [{"uuid": "abc", "title": "Title", "content": "Once upon a time..."}]
     res = client.post("/score", json={"stories": stories, "prompt": "a fairy tale"})
 
@@ -95,12 +95,12 @@ def test_valid_story_returns_scores(mock_score, client):
     assert data["scores"][0]["coherence"] == 0.8
 
 
-@patch("score_api.score_story")
+@patch("score_api.batch_score")
 def test_meta_counts_are_correct(mock_score, client):
-    mock_score.return_value = {
-        "coherence": 0.8, "creativity": 0.7,
-        "relevance": 0.9, "overall": 0.8
-    }
+    mock_score.return_value = [
+        {"uuid": "1", "coherence": 0.8, "creativity": 0.7, "relevance": 0.9, "overall": 0.8},
+        {"uuid": "3", "coherence": 0.8, "creativity": 0.7, "relevance": 0.9, "overall": 0.8}
+    ]
     stories = [
         {"uuid": "1", "title": "t", "content": "valid story"},
         {"uuid": "2", "title": "t"},          # missing content → fails
@@ -116,7 +116,7 @@ def test_meta_counts_are_correct(mock_score, client):
 
 # ── /score – error isolation ──────────────────────────────────────────────────
 
-@patch("score_api.score_story", side_effect=FileNotFoundError("model.pkl not found"))
+@patch("score_api.batch_score", side_effect=FileNotFoundError("model.pkl not found"))
 def test_model_unavailable_does_not_abort_batch(mock_score, client):
     stories = [
         {"uuid": "1", "title": "t", "content": "story one"},
