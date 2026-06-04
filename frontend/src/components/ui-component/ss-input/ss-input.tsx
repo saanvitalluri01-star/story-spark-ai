@@ -51,13 +51,16 @@ const SSInput = <T extends FieldValues>({
         {/* Left Icon */}
         {icon && (
 
+
           <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-gray-500 pointer-events-none">
+
 
 
 
             <i className={icon}></i>
           </span>
         )}
+
 
 
 
@@ -108,7 +111,7 @@ const SSInput = <T extends FieldValues>({
             <i className={showPassword ? "fi fi-rr-eye" : "fi fi-rr-eye-crossed"}></i>
           </button>
         )}
-
+     
       </div>
 
       {/* Error Message */}
