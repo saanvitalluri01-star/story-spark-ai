@@ -26,7 +26,6 @@ const toggleReaction = async (
     isDeleted: { $ne: true },
   }).select("likesCount reactions");
   
-
   if (!post) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Post not found!");
   }
@@ -36,10 +35,16 @@ const toggleReaction = async (
     userId: user._id,
   });
 
-  if (existingReaction && existingReaction.type === type) {
-    await Reaction.findByIdAndDelete(existingReaction._id);
-
-    const likesCount = await Reaction.countDocuments({ postId });
+  if (existingReaction) {
+    if (existingReaction.type === type) {
+      // Remove reaction if the same type is toggled
+      await Reaction.findByIdAndDelete(existingReaction._id);
+      
+      post.reactions = (post.reactions || []).filter(
+        (id) => id && id.toString() !== existingReaction._id.toString()
+      );
+      post.likesCount = Math.max(0, (post.likesCount || 0) - 1);
+      await post.save();
 
     return {
       message: "Reaction removed successfully",
@@ -71,3 +76,4 @@ const toggleReaction = async (
 export const ReactionService = {
   toggleReaction,
 };
+      
