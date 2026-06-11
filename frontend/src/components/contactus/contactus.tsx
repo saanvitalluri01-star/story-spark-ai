@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import {
   Mail,
@@ -194,6 +194,7 @@ const FloatingLabelTextarea = ({
 }: FloatingLabelTextareaProps) => {
   const [focused, setFocused] = useState(false);
   const isFloated = focused || value.length > 0;
+  const maxLength = 500;
 
   return (
     <div className="contact-float-field group">
@@ -217,6 +218,7 @@ const FloatingLabelTextarea = ({
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           required
+          maxLength={maxLength}
           placeholder=" "
           aria-label="Message"
           aria-invalid={error}
@@ -237,6 +239,18 @@ const FloatingLabelTextarea = ({
         >
           Message
         </label>
+
+        {/* Character counter */}
+        <div 
+          className={`absolute bottom-2 right-3 text-[10px] font-medium tracking-wide transition-opacity duration-300 ${
+            focused || value.length > 0 ? "opacity-100" : "opacity-0"
+          } ${
+            value.length >= maxLength ? "text-red-400" : "text-slate-500"
+          }`}
+          aria-live="polite"
+        >
+          {value.length}/{maxLength}
+        </div>
 
         {/* Animated focus underline */}
         <span className="contact-float-underline" aria-hidden="true" />
