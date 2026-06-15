@@ -763,18 +763,16 @@ if (isLoading) {
                 <span className="inline-flex items-center rounded-full bg-blue-900/60 text-blue-300 border border-blue-700/50 py-1 px-3 text-xs font-semibold">
                   Γëí╞Æ├«├ë {selectedStory.language || "English"}
                 </span>
-                {selectedStory.emotions &&
-                  selectedStory.emotions.length > 0 && (
-                    <span className="inline-flex items-center rounded-full bg-emerald-900/60 text-emerald-300 border border-emerald-700/50 py-1 px-3 text-xs font-semibold">
-                      Γëí╞Æ├┐├¿ {selectedStory.emotions.join(", ")}
-                    </span>
-                  )}
+                {selectedStory.emotions && selectedStory.emotions.length > 0 && (
+                  <span className="inline-flex items-center rounded-full bg-emerald-900/60 text-emerald-300 border border-emerald-700/50 py-1 px-3 text-xs font-semibold">
+                    Γëí╞Æ├┐├¿ {selectedStory.emotions.join(", ")}
+                  </span>
+                )}
               </div>
             </div>
             <div className="flex justify-start sm:justify-end">
               <div className="flex -space-x-5">
-                {stories &&
-                  stories.length > 0 &&
+                {stories && stories.length > 0 && (
                   stories.map((story) => (
                     <button
                       key={story.uuid}
@@ -791,7 +789,8 @@ if (isLoading) {
                         className="w-full h-full object-cover rounded-full"
                       />
                     </button>
-                  ))}
+                  ))
+                )}
               </div>
             </div>
           </div>
@@ -799,7 +798,7 @@ if (isLoading) {
           <div className="bg-slate-800/80 backdrop-blur-xl border border-slate-700/50 p-8 rounded-2xl shadow-2xl relative overflow-hidden">
             <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
             <div className="absolute bottom-[-50px] left-[-50px] w-48 h-48 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
+            
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
               <h3 className="text-xl font-bold text-slate-200 relative z-10">
                 Generated Story
@@ -849,9 +848,7 @@ if (isLoading) {
                   type="button"
                   id="publish-story-btn"
                   className={`rounded-lg px-5 py-2 font-semibold flex items-center space-x-2 cursor-pointer bg-blue-600 text-white transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
-                    loading
-                      ? ""
-                      : "hover:bg-blue-500 hover:shadow-lg active:scale-95"
+                    loading ? "" : "hover:bg-blue-500 hover:shadow-lg active:scale-95"
                   }`}
                   onClick={handelPublishStory}
                   disabled={loading || !selectedStory}
@@ -864,8 +861,7 @@ if (isLoading) {
             {selectedStory.enhancedPrompt && (
               <div className="mb-6 p-4 bg-indigo-900/30 border border-indigo-700/50 rounded-xl relative z-10">
                 <h4 className="text-sm font-semibold text-indigo-300 mb-2 flex items-center gap-2">
-                  <i className="fas fa-wand-magic-sparkles"></i> AI Enhanced
-                  Prompt
+                  <i className="fas fa-wand-magic-sparkles"></i> AI Enhanced Prompt
                 </h4>
                 <p className="text-slate-300 text-sm italic break-words whitespace-pre-wrap">
                   {selectedStory.enhancedPrompt}
@@ -873,92 +869,90 @@ if (isLoading) {
               </div>
             )}
 
-            <div
-              id="story-content"
-              className="prose prose-invert max-w-none text-slate-300 leading-relaxed tracking-wide relative z-10"
-            >
+            <div id="story-content" className="prose prose-invert max-w-none text-slate-300 leading-relaxed tracking-wide relative z-10">
               <p className="break-words whitespace-pre-wrap">
-                {sentenceSegments.length > 0
-                  ? sentenceSegments.map((segment: StorySentenceSegment) => {
-                      const isActiveSentence =
-                        isNarrationActive &&
-                        narrationWordIndex >= segment.startWordIndex &&
-                        narrationWordIndex <= segment.endWordIndex;
+                {sentenceSegments.length > 0 ? (
+                  sentenceSegments.map((segment: StorySentenceSegment) => {
+                    const isActiveSentence =
+                      isNarrationActive &&
+                      narrationWordIndex >= segment.startWordIndex &&
+                      narrationWordIndex <= segment.endWordIndex;
 
-                      const rawParts = segment.text.split(/(\s+)/);
-                      let wordOffset = 0;
+                    const rawParts = segment.text.split(/(\s+)/);
+                    let wordOffset = 0;
 
-                      return (
-                        <span
-                          key={segment.id}
-                          className={
-                            isActiveSentence
-                              ? "text-slate-100 font-medium transition-colors duration-300"
-                              : undefined
+                    return (
+                      <span
+                        key={segment.id}
+                        className={isActiveSentence ? "text-slate-100 font-medium transition-colors duration-300" : undefined}
+                      >
+                        {rawParts.map((part, partIdx) => {
+                          if (part === "") return null;
+                          if (/^\s+$/.test(part)) {
+                            return part;
                           }
-                        >
-                          {rawParts.map((part, partIdx) => {
-                            if (part === "") return null;
-                            if (/^\s+$/.test(part)) {
-                              return part;
-                            }
 
-                            const absoluteWordIndex =
-                              segment.startWordIndex + wordOffset;
-                            wordOffset++;
+                          const absoluteWordIndex = segment.startWordIndex + wordOffset;
+                          wordOffset++;
 
-                            const isActiveWord =
-                              isNarrationActive &&
-                              narrationWordIndex === absoluteWordIndex;
+                          const isActiveWord = isNarrationActive && narrationWordIndex === absoluteWordIndex;
 
-                            if (isActiveWord) {
-                              return (
-                                <span
-                                  key={partIdx}
-                                  className="bg-indigo-500/30 text-indigo-300 rounded px-1 transition-all duration-150 active-narrated-word"
-                                  data-active-word="true"
-                                >
-                                  {part}
-                                </span>
-                              );
-                            }
+                          if (isActiveWord) {
+                            return (
+                              <span
+                                key={partIdx}
+                                className="bg-indigo-500/30 text-indigo-300 rounded px-1 transition-all duration-150 active-narrated-word"
+                                data-active-word="true"
+                              >
+                                {part}
+                              </span>
+                            );
+                          }
 
-                            return <span key={partIdx}>{part}</span>;
-                          })}
-                        </span>
-                      );
-                    })
-                  : (() => {
-                      const rawParts = selectedStory.content.split(/(\s+)/);
-                      let wordOffset = 0;
-                      return rawParts.map((part, partIdx) => {
-                        if (part === "") return null;
-                        if (/^\s+$/.test(part)) {
-                          return part;
-                        }
-
-                        const absoluteWordIndex = wordOffset;
-                        wordOffset++;
-
-                        const isActiveWord =
-                          isNarrationActive &&
-                          narrationWordIndex === absoluteWordIndex;
-
-                        if (isActiveWord) {
                           return (
-                            <span
-                              key={partIdx}
-                              className="bg-indigo-500/30 text-indigo-300 rounded px-1 transition-all duration-150 active-narrated-word"
-                              data-active-word="true"
-                            >
+                            <span key={partIdx}>
                               {part}
                             </span>
                           );
-                        }
+                        })}
+                      </span>
+                    );
+                  })
+                ) : (
+                  (() => {
+                    const rawParts = selectedStory.content.split(/(\s+)/);
+                    let wordOffset = 0;
+                    return rawParts.map((part, partIdx) => {
+                      if (part === "") return null;
+                      if (/^\s+$/.test(part)) {
+                        return part;
+                      }
 
-                        return <span key={partIdx}>{part}</span>;
-                      });
-                    })()}
+                      const absoluteWordIndex = wordOffset;
+                      wordOffset++;
+
+                      const isActiveWord = isNarrationActive && narrationWordIndex === absoluteWordIndex;
+
+                      if (isActiveWord) {
+                        return (
+                          <span
+                            key={partIdx}
+                            className="bg-indigo-500/30 text-indigo-300 rounded px-1 transition-all duration-150 active-narrated-word"
+                            data-active-word="true"
+                          >
+                            {part}
+                          </span>
+                        );
+                      }
+
+                      return (
+                        <span key={partIdx}>
+                          {part}
+                        </span>
+                      );
+                    });
+                  })()
+                )}
               </p>
             </div>
 
@@ -1043,7 +1037,7 @@ if (isLoading) {
             {selectedStory && (
               <div className="bg-slate-800/60 backdrop-blur-xl border border-slate-700/50 rounded-2xl shadow-xl p-6 mt-8 relative overflow-hidden">
                 <div className="absolute top-[-50px] right-[-50px] w-48 h-48 bg-purple-500/5 rounded-full blur-3xl pointer-events-none"></div>
-
+                
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                   <div>
                     <h3 className="text-xl font-bold text-slate-200 flex items-center gap-2">
@@ -1053,15 +1047,13 @@ if (isLoading) {
                       Explore alternate narrative styles for your story context.
                     </p>
                   </div>
-                  {selectedStory.content !==
-                    originalStoryContent[selectedStory.uuid] && (
+                  {selectedStory.content !== originalStoryContent[selectedStory.uuid] && (
                     <button
                       type="button"
                       onClick={handleResetEnding}
                       className="rounded-lg px-4 py-2 bg-red-950/40 hover:bg-red-900/60 text-red-200 border border-red-700/50 font-semibold text-sm transition-all active:scale-95 cursor-pointer flex items-center gap-1.5"
                     >
-                      <i className="fa-solid fa-rotate-left"></i> Reset to
-                      Original
+                      <i className="fa-solid fa-rotate-left"></i> Reset to Original
                     </button>
                   )}
                 </div>
@@ -1082,17 +1074,12 @@ if (isLoading) {
                         { name: "Dark Ending" },
                         { name: "Plot Twist Ending" },
                         { name: "Open Ending" },
-                        { name: "Cliffhanger Ending" },
+                        { name: "Cliffhanger Ending" }
                       ].map((s) => {
-                        const hasEndings =
-                          endingsCache[selectedStory.uuid] || [];
-                        const endingData = hasEndings.find(
-                          (e) => e.style === s.name,
-                        );
-                        const isApplied =
-                          endingData &&
-                          selectedStory.content === endingData.fullStory;
-
+                        const hasEndings = endingsCache[selectedStory.uuid] || [];
+                        const endingData = hasEndings.find((e) => e.style === s.name);
+                        const isApplied = endingData && selectedStory.content === endingData.fullStory;
+                        
                         return (
                           <button
                             key={s.name}
@@ -1115,16 +1102,12 @@ if (isLoading) {
 
                     {/* Tab content */}
                     {(() => {
-                      const currentEndings =
-                        endingsCache[selectedStory.uuid] || [];
-                      const currentEndingData = currentEndings.find(
-                        (e) => e.style === activeEndingTab,
-                      );
+                      const currentEndings = endingsCache[selectedStory.uuid] || [];
+                      const currentEndingData = currentEndings.find((e) => e.style === activeEndingTab);
                       if (!currentEndingData) return null;
-
-                      const isCurrentlyApplied =
-                        selectedStory.content === currentEndingData.fullStory;
-
+                      
+                      const isCurrentlyApplied = selectedStory.content === currentEndingData.fullStory;
+                      
                       return (
                         <div className="bg-slate-900/40 rounded-xl p-6 border border-slate-700/30">
                           <div className="flex justify-between items-center mb-4">
@@ -1134,15 +1117,12 @@ if (isLoading) {
                             <div>
                               {isCurrentlyApplied ? (
                                 <span className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5">
-                                  <i className="fa-solid fa-check"></i> Applied
-                                  to Story
+                                  <i className="fa-solid fa-check"></i> Applied to Story
                                 </span>
                               ) : (
                                 <button
                                   type="button"
-                                  onClick={() =>
-                                    handleApplyEnding(currentEndingData)
-                                  }
+                                  onClick={() => handleApplyEnding(currentEndingData)}
                                   className="rounded-lg px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold text-sm transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-md hover:shadow-purple-500/20"
                                 >
                                   Apply to Story
@@ -1150,21 +1130,17 @@ if (isLoading) {
                               )}
                             </div>
                           </div>
-
+                          
                           <div className="space-y-4">
                             <div className="bg-slate-950/60 p-5 rounded-xl border border-slate-800 leading-relaxed text-slate-300 text-sm md:text-base italic shadow-inner whitespace-pre-wrap">
                               <p>{currentEndingData.ending}</p>
                             </div>
-
+                            
                             <div>
                               <details className="group border border-slate-800 rounded-lg overflow-hidden bg-slate-950/20">
                                 <summary className="list-none flex items-center justify-between p-3 text-xs font-bold text-slate-400 hover:text-slate-200 cursor-pointer select-none">
-                                  <span>
-                                    PREVIEW FULL STORY WITH THIS ENDING
-                                  </span>
-                                  <span className="transition-transform duration-200 group-open:rotate-180">
-                                    Γû╝
-                                  </span>
+                                  <span>PREVIEW FULL STORY WITH THIS ENDING</span>
+                                  <span className="transition-transform duration-200 group-open:rotate-180">Γû╝</span>
                                 </summary>
                                 <div className="p-4 border-t border-slate-800/80 text-xs text-slate-400 leading-relaxed max-h-56 overflow-y-auto whitespace-pre-wrap">
                                   {currentEndingData.fullStory}
@@ -1186,9 +1162,7 @@ if (isLoading) {
                       Generate Alternate Endings
                     </button>
                     <p className="text-xs text-slate-400 mt-3 text-center max-w-sm px-4 leading-relaxed">
-                      Uses the story context to produce 5 unique ending
-                      variations (Happy, Dark, Plot Twist, Open, Cliffhanger)
-                      for comparison.
+                      Uses the story context to produce 5 unique ending variations (Happy, Dark, Plot Twist, Open, Cliffhanger) for comparison.
                     </p>
                   </div>
                 )}
@@ -1227,12 +1201,10 @@ if (isLoading) {
                       {selectedStory.tag.toUpperCase()}
                     </div>
                     <div className="inline-flex items-center rounded-full bg-indigo-600 py-1 px-3 text-xs font-semibold text-white shadow-sm">
-                      Γëí╞Æ├«├ë{" "}
-                      {(selectedStory.language || "English").toUpperCase()}
+                      Γëí╞Æ├«├ë {(selectedStory.language || "English").toUpperCase()}
                     </div>
                     <div className="inline-flex items-center rounded-full bg-slate-700 py-1 px-2.5 text-xs font-medium text-slate-300 shadow-sm gap-1">
-                      ╬ô├àΓûÆΓê⌐Γòò├à{" "}
-                      {calculateReadingTime(selectedStory.content)} min read
+                      ╬ô├àΓûÆΓê⌐Γòò├à {calculateReadingTime(selectedStory.content)} min read
                     </div>
                   </div>
                   <div>
