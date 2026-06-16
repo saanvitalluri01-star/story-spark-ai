@@ -506,7 +506,7 @@ const deletePost = async (postId: string, token: ITokenPayload) => {
 
   if (post.isPublished) {
     await User.findByIdAndUpdate(
-      user._id,
+      post.author,
       { $inc: { postsCount: -1 } }
     );
   }
