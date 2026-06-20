@@ -6,7 +6,7 @@ export interface IComment {
   comment: string;
   parentCommentId?: Types.ObjectId;
   likes?: Types.ObjectId[];
-
+  helpful?: Types.ObjectId[];
   isDeleted?: boolean;
   deletedAt?: Date | null;
 
@@ -34,6 +34,7 @@ export interface ILeanComment {
   comment: string;
   parentCommentId?: Types.ObjectId;
   likes?: any[];
+  helpful?: any[];
   createdAt: Date;
   updatedAt: Date;
 }
